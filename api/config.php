@@ -6,9 +6,9 @@
 
 // Database credentials - UPDATE THESE FOR YOUR HOSTINGER ACCOUNT
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'u120438863_wedding_db'); // e.g., u123456789_wedding
-define('DB_USER', 'u120438863_wedding_db'); // e.g., u123456789_admin
-define('DB_PASS', '42@3qiKpc3cF?0dLfa');
+define('DB_NAME', 'db_mikomae'); // e.g., u123456789_wedding
+define('DB_USER', 'root'); // e.g., u123456789_admin
+define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 
 // Site settings
@@ -24,8 +24,7 @@ define('DEBUG_MODE', true);
 if (DEBUG_MODE) {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-}
-else {
+} else {
     error_reporting(0);
     ini_set('display_errors', 0);
 }
