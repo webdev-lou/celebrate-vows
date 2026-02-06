@@ -1,14 +1,19 @@
 # Enable URL Rewriting
 RewriteEngine On
 
-# Remove .html extension from URLs
+# Redirect /index or /index.html to root /
+RewriteCond %{THE_REQUEST} /index(\.html)?[\s?] [NC]
+RewriteRule ^ / [R=301,L]
+
+# Redirect requests with .html to clean URLs (prevents duplicate content)
+RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
+RewriteCond %{REQUEST_URI} !^/index\.html$
+RewriteRule ^ /%1 [NC,L,R=301]
+
+# Remove .html extension - serve .html files without extension
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.html -f
 RewriteRule ^(.*)$ $1.html [NC,L]
-
-# Redirect requests with .html to clean URLs (optional - prevents duplicate content)
-RewriteCond %{THE_REQUEST} /([^.]+)\.html [NC]
-RewriteRule ^ /%1 [NC,L,R=301]
 
 # Set default directory index
 DirectoryIndex index.html
