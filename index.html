@@ -78,9 +78,29 @@
                     After six years of a journey marked by faith, patience, and choosing purity, they now step into a
                     new chapter, joining hands and hearts, ready to be united in marriage for God’s greater glory.
                 </p>
-                <div class="journey-photo">
-                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop"
-                        alt="Our Journey Together">
+                <!-- Journey Gallery -->
+                <div class="journey-gallery">
+                    <div class="gallery-item" onclick="openGalleryLightbox(0)">
+                        <img src="images/gallery/IMG_3649.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(1)">
+                        <img src="images/gallery/IMG_3528.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(2)">
+                        <img src="images/gallery/IMG_3568.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(3)">
+                        <img src="images/gallery/IMG_3605.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(4)">
+                        <img src="images/gallery/IMG_3724.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(5)">
+                        <img src="images/gallery/IMG_3901.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
+                    <div class="gallery-item" onclick="openGalleryLightbox(6)">
+                        <img src="images/gallery/IMG_3610.webp" alt="Miko and Mae" loading="lazy">
+                    </div>
                 </div>
             </div>
         </div>
@@ -385,8 +405,7 @@
                 </div>
 
                 <div class="gallery-preview">
-                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop"
-                        alt="Wedding moment" class="gallery-img">
+                    <img src="./images/IMG_3984.webp" alt="Wedding moment" class="gallery-img">
                 </div>
             </div>
         </div>
@@ -404,6 +423,17 @@
             <p class="copyright">&copy; 2026 Miko & Mae Wedding. Made with <i class="fas fa-heart"></i></p>
         </div>
     </footer>
+
+    <!-- Gallery Lightbox (at body level for proper fixed positioning) -->
+    <div class="gallery-lightbox" id="galleryLightbox">
+        <button class="lightbox-close" onclick="closeGalleryLightbox()">&times;</button>
+        <button class="lightbox-nav prev" onclick="navigateGallery(-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="lightbox-image-wrapper">
+            <img src="" alt="Gallery Image" id="galleryLightboxImage">
+        </div>
+        <button class="lightbox-nav next" onclick="navigateGallery(1)"><i class="fas fa-chevron-right"></i></button>
+        <div class="lightbox-counter" id="galleryCounter">1 / 17</div>
+    </div>
 
     <script src="script.js"></script>
 </body>

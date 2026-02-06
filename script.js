@@ -76,6 +76,86 @@ function applySettings(settings) {
     }
 }
 
+// ================================
+// Gallery Lightbox
+// ================================
+const galleryImages = [
+    'images/gallery/IMG_3649.webp',
+    'images/gallery/IMG_3528.webp',
+    'images/gallery/IMG_3568.webp',
+    'images/gallery/IMG_3605.webp',
+    'images/gallery/IMG_3724.webp',
+    'images/gallery/IMG_3901.webp',
+    'images/gallery/IMG_3610.webp',
+    'images/gallery/IMG_3534.webp',
+    'images/gallery/IMG_3596.webp',
+    'images/gallery/IMG_3602.webp',
+    'images/gallery/IMG_3609.webp',
+    'images/gallery/IMG_3618.webp',
+    'images/gallery/IMG_3639.webp',
+    'images/gallery/IMG_3701.webp',
+    'images/gallery/IMG_3783.webp',
+    'images/gallery/IMG_3921.webp'
+];
+
+let currentGalleryIndex = 0;
+
+function openGalleryLightbox(index) {
+    currentGalleryIndex = index;
+    const lightbox = document.getElementById('galleryLightbox');
+    const image = document.getElementById('galleryLightboxImage');
+    const counter = document.getElementById('galleryCounter');
+
+    image.src = galleryImages[index];
+    counter.textContent = `${index + 1} / ${galleryImages.length}`;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeGalleryLightbox() {
+    const lightbox = document.getElementById('galleryLightbox');
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function navigateGallery(direction) {
+    currentGalleryIndex += direction;
+
+    // Loop around
+    if (currentGalleryIndex < 0) {
+        currentGalleryIndex = galleryImages.length - 1;
+    } else if (currentGalleryIndex >= galleryImages.length) {
+        currentGalleryIndex = 0;
+    }
+
+    const image = document.getElementById('galleryLightboxImage');
+    const counter = document.getElementById('galleryCounter');
+
+    image.src = galleryImages[currentGalleryIndex];
+    counter.textContent = `${currentGalleryIndex + 1} / ${galleryImages.length}`;
+}
+
+// Close lightbox on background click
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('gallery-lightbox')) {
+        closeGalleryLightbox();
+    }
+});
+
+// Keyboard navigation for gallery
+document.addEventListener('keydown', function (e) {
+    const lightbox = document.getElementById('galleryLightbox');
+    if (!lightbox || !lightbox.classList.contains('active')) return;
+
+    if (e.key === 'Escape') {
+        closeGalleryLightbox();
+    } else if (e.key === 'ArrowLeft') {
+        navigateGallery(-1);
+    } else if (e.key === 'ArrowRight') {
+        navigateGallery(1);
+    }
+});
+
 // Store quiz data from database for scoring
 let quizData = [];
 
