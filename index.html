@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Celebrate the wedding of Miko & Mae - February 28, 2026">
+    <title>Miko & Mae | Wedding Celebration</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <i class="fas fa-heart"></i> Miko & Mae
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link active">HOME</a></li>
+                <li><a href="#journey" class="nav-link">OUR STORY</a></li>
+                <li><a href="#details" class="nav-link">DETAILS</a></li>
+                <li><a href="#entourage" class="nav-link">ENTOURAGE</a></li>
+                <li><a href="#rsvp" class="nav-link">RSVP</a></li>
+            </ul>
+            <button class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="couple-photo">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=300&h=300&fit=crop&crop=faces"
+                    alt="Miko and Mae">
+            </div>
+            <h1 class="couple-names" id="coupleNames">Miko <span class="ampersand">&</span> Mae</h1>
+            <div class="wedding-date">
+                <i class="far fa-calendar-alt"></i>
+                <span id="weddingDateDisplay">FEBRUARY 28, 2026</span>
+            </div>
+            <a href="#rsvp" class="btn btn-primary">RSVP Now</a>
+        </div>
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Our Journey Section -->
+    <section class="journey" id="journey">
+        <div class="container">
+            <h2 class="section-title">Our Journey</h2>
+            <div class="journey-content">
+                <p class="journey-text">
+                    It was by God's grace that our paths crossed. What started as a simple hello
+                    turned into a beautiful love story that continues to unfold each day. Through
+                    laughter and tears, through triumphs and challenges, we've grown stronger together.
+                </p>
+                <p class="journey-text">
+                    Now, as we prepare to take this next step in our journey, we are filled with
+                    gratitude for the love and support of our family and friends. We can't wait to
+                    share this special day with all of you.
+                </p>
+                <div class="journey-photo">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&h=400&fit=crop"
+                        alt="Our Journey Together">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Details Section -->
+    <section class="details" id="details">
+        <div class="container">
+            <h2 class="section-title">The Details</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <div class="detail-icon ceremony">
+                        <i class="fas fa-church"></i>
+                    </div>
+                    <h3>When</h3>
+                    <p class="detail-main" id="weddingDateDetails">Saturday, February 28, 2026</p>
+                    <p class="detail-sub">Ceremony starts at 3:00 PM</p>
+
+                    <div class="detail-divider"></div>
+
+                    <h3>Where</h3>
+                    <p class="detail-main">San Agustin Church</p>
+                    <p class="detail-sub">Gen. Luna St, Intramuros, Manila</p>
+
+                    <a href="https://maps.google.com" target="_blank" class="btn btn-outline">
+                        <i class="fas fa-map-marker-alt"></i> View Map
+                    </a>
+                </div>
+
+                <div class="detail-card dress-code-card">
+                    <div class="detail-icon dresscode">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <h3>Dress Code</h3>
+                    <p class="dress-code-note">"We would love to see you wearing a formal or semi-formal attire in the
+                        shade of Beige or
+                        Teal"</p>
+
+                    <div class="color-palette clickable">
+                        <div class="color-item" onclick="openAttireLightbox('beige', 'Pale Cream')"
+                            title="Click for attire inspiration">
+                            <span class="color-swatch" style="background: #F5E6D3;"></span>
+                            <span class="color-name">Pale Cream</span>
+                            <span class="color-hint">Click for attire inspiration</span>
+                        </div>
+                        <div class="color-item" onclick="openAttireLightbox('tan', 'Warm Tan')"
+                            title="Click for attire inspiration">
+                            <span class="color-swatch" style="background: #D4A574;"></span>
+                            <span class="color-name">Warm Tan</span>
+                            <span class="color-hint">Click for attire inspiration</span>
+                        </div>
+                        <div class="color-item" onclick="openAttireLightbox('turquoise', 'Soft Turquoise')"
+                            title="Click for attire inspiration">
+                            <span class="color-swatch" style="background: #5BC0BE;"></span>
+                            <span class="color-name">Soft Turquoise</span>
+                            <span class="color-hint">Click for attire inspiration</span>
+                        </div>
+                        <div class="color-item" onclick="openAttireLightbox('teal', 'Deep Teal')"
+                            title="Click for attire inspiration">
+                            <span class="color-swatch" style="background: #2A9D8F;"></span>
+                            <span class="color-name">Deep Teal</span>
+                            <span class="color-hint">Click for attire inspiration</span>
+                        </div>
+                        <div class="color-item" onclick="openAttireLightbox('charcoal', 'Dark Charcoal')"
+                            title="Click for attire inspiration">
+                            <span class="color-swatch" style="background: #3D3D3D;"></span>
+                            <span class="color-name">Dark Charcoal</span>
+                            <span class="color-hint">Click for attire inspiration</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Attire Lightbox Modal -->
+    <div class="lightbox-overlay" id="attireLightbox">
+        <div class="lightbox-content">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <div class="lightbox-header">
+                <h3 id="lightboxTitle">Attire Inspiration</h3>
+                <p class="lightbox-subtitle">Semi-formal and formal attire based on Philippine fashion</p>
+            </div>
+            <div class="lightbox-image-container">
+                <img src="" alt="Attire Inspiration" id="lightboxImage">
+            </div>
+            <div class="lightbox-footer">
+                <p>Barong Tagalog • Filipiniana • Terno</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entourage Section -->
+    <section class="entourage" id="entourage">
+        <div class="container">
+            <p class="section-subtitle">THE WEDDING PARTY</p>
+            <h2 class="section-title">Entourage</h2>
+
+            <!-- Maid of Honor & Best Man -->
+            <div class="honor-attendants">
+                <div class="honor-card">
+                    <h3 class="honor-title">MAID OF HONOR</h3>
+                    <div class="honor-icon female">
+                        <i class="fas fa-female"></i>
+                    </div>
+                    <h4 class="honor-name">Sophia Mae Williams</h4>
+                </div>
+                <div class="honor-card">
+                    <h3 class="honor-title">BEST MAN</h3>
+                    <div class="honor-icon male">
+                        <i class="fas fa-male"></i>
+                    </div>
+                    <h4 class="honor-name">James Michael Cruz</h4>
+                </div>
+            </div>
+
+            <!-- Principal Sponsors -->
+            <div class="sponsors-section">
+                <h3 class="sponsors-title">PRINCIPAL SPONSORS</h3>
+                <div class="sponsors-grid">
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Arturo Santos</p>
+                        <p class="sponsor-spouse">& Mrs. Maria Santos</p>
+                    </div>
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Ricardo Dalisay</p>
+                        <p class="sponsor-spouse">& Mrs. Corazon Dalisay</p>
+                    </div>
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Fernando Reyes</p>
+                        <p class="sponsor-spouse">& Mrs. Leonora Reyes</p>
+                    </div>
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Eduardo Garcia</p>
+                        <p class="sponsor-spouse">& Mrs. Teresa Garcia</p>
+                    </div>
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Roberto Mendoza</p>
+                        <p class="sponsor-spouse">& Mrs. Imelda Mendoza</p>
+                    </div>
+                    <div class="sponsor-couple">
+                        <p class="sponsor-name">Mr. Jose Rizalino</p>
+                        <p class="sponsor-spouse">& Mrs. Josephine Rizalino</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RSVP & Quiz Section -->
+    <section class="rsvp" id="rsvp">
+        <div class="container">
+            <div class="rsvp-content">
+                <div class="rsvp-header">
+                    <h2 class="section-title">RSVP & Journey Quiz</h2>
+                    <p class="section-description">Help us prepare and see how well you know our story! Kindly respond
+                        by <span id="rsvpDeadlineDisplay">January 15, 2026</span>.</p>
+                </div>
+
+                <form class="rsvp-form" id="rsvp-form">
+                    <!-- Basic Info -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Will you be attending?</label>
+                            <div class="radio-cards">
+                                <label class="radio-card">
+                                    <input type="radio" name="attending" value="yes" required>
+                                    <span class="radio-card-content">
+                                        <i class="far fa-smile"></i>
+                                        Joyfully Accepts
+                                    </span>
+                                </label>
+                                <label class="radio-card">
+                                    <input type="radio" name="attending" value="no">
+                                    <span class="radio-card-content">
+                                        <i class="far fa-frown"></i>
+                                        Regretfully Declines
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div class="quiz-section">
+                        <div class="quiz-header">
+                            <div class="quiz-icon">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="quiz-title-group">
+                                <h3>How well do you know us?</h3>
+                                <p>A quick trivia challenge before you submit your response!</p>
+                            </div>
+                        </div>
+
+                        <div class="quiz-grid" id="quiz-container">
+                            <!-- Quiz questions will be loaded dynamically from the database -->
+                            <div class="quiz-loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <span>Loading quiz questions...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message for the Couple</label>
+                        <textarea id="message" name="message" rows="3"
+                            placeholder="Any dietary restrictions or well wishes?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Submit RSVP & Quiz Answers</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capture the Moment Section -->
+    <section class="capture" id="capture">
+        <div class="container">
+            <h2 class="section-title">Capture the Moment</h2>
+            <p class="section-description">
+                Help us capture every precious moment! Share your photos and videos from our special day.<br>
+                Use our wedding hashtag: <strong id="weddingHashtagText">#MikoAndMaeForever</strong>
+            </p>
+
+            <div class="capture-content">
+                <div class="upload-card">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Upload Photos & Videos</h3>
+                    <p>Share your captured memories with us</p>
+                    <button class="btn btn-outline">Choose Files</button>
+                </div>
+
+                <div class="gallery-preview">
+                    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=300&fit=crop"
+                        alt="Wedding moment" class="gallery-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <h2 class="footer-title" id="weddingHashtagFooter">#MikoAndMaeForever</h2>
+            <p class="footer-text">Thank you for being part of our special day</p>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="copyright">&copy; 2026 Miko & Mae Wedding. Made with <i class="fas fa-heart"></i></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
