@@ -12,7 +12,7 @@ define('DB_PASS', '42@3qiKpc3cF?0dLfa');
 define('DB_CHARSET', 'utf8mb4');
 
 // Site settings
-define('SITE_URL', 'http://localhost/celebratevows'); // Update for production
+define('SITE_URL', 'https://maedmikomplete.celebratevows.com/'); // Update for production
 define('ADMIN_SESSION_NAME', 'wedding_admin_session');
 
 // Security
