@@ -1336,6 +1336,10 @@ textarea {
     .capture-content {
         grid-template-columns: 1fr;
     }
+
+    .hero {
+        min-height: 70vh;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1400,6 +1404,10 @@ textarea {
         width: 100px;
         height: 100px;
     }
+
+    .hero {
+        min-height: 60vh;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1423,5 +1431,9 @@ textarea {
     .color-swatch {
         width: 32px;
         height: 32px;
+    }
+
+    .hero {
+        min-height: 40vh;
     }
 }
