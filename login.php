@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Miko & Mae Wedding</title>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Miko & Mae | Wedding Celebration">
+    <meta property="og:description"
+        content="You are invited to celebrate the wedding of Miko & Mae - February 28, 2026">
+    <meta property="og:image" content="https://maedmikomplete.celebratevows.com/images/social-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Miko & Mae | Wedding Celebration">
+    <meta name="twitter:description"
+        content="You are invited to celebrate the wedding of Miko & Mae - February 28, 2026">
+    <meta name="twitter:image" content="https://maedmikomplete.celebratevows.com/images/social-image.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
