@@ -538,7 +538,7 @@ textarea {
 }
 
 .color-name {
-    font-size: 0.7rem;
+    font-size: 1rem;
     color: var(--gray-600);
     font-weight: 500;
 }
@@ -563,7 +563,7 @@ textarea {
 .color-palette.clickable .color-item {
     cursor: pointer;
     transition: all 0.3s ease;
-    padding: 12px 8px 8px;
+    padding: 12px 12px 8px;
     border-radius: 8px;
     background: transparent;
 }
@@ -586,7 +586,7 @@ textarea {
 
 .color-hint {
     display: block;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     color: var(--primary);
     margin-top: 4px;
     opacity: 0.7;
