@@ -234,7 +234,7 @@ textarea {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: url('https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=1920&h=1080&fit=crop') center/cover no-repeat;
+    background: url('./images/hero.webp') center/cover no-repeat;
     text-align: center;
     color: var(--white);
 }
@@ -407,7 +407,7 @@ textarea {
 }
 
 .journey-content {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     text-align: center;
 }
@@ -448,7 +448,7 @@ textarea {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-xl);
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
