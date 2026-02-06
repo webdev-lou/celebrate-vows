@@ -19,12 +19,60 @@ const ITEMS_PER_PAGE = 10;
 // Initialize on DOM Load
 document.addEventListener('DOMContentLoaded', function () {
     initNavigation();
+    initMobileMenu();
     initGuestManagement();
     initQuizManagement();
     initSettings();
     initModal();
     loadDashboardData();
 });
+
+// ================================
+// Mobile Menu Toggle
+// ================================
+function initMobileMenu() {
+    const toggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    if (!toggle || !sidebar || !overlay) return;
+
+    toggle.addEventListener('click', function () {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+        // Toggle icon
+        const icon = this.querySelector('i');
+        if (sidebar.classList.contains('open')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+    });
+
+    // Close sidebar when clicking overlay
+    overlay.addEventListener('click', function () {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        const icon = toggle.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    });
+
+    // Close sidebar when clicking a nav item (mobile)
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function () {
+            if (window.innerWidth <= 992) {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                const icon = toggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    });
+}
 
 // ================================
 // Logout Function

@@ -1171,6 +1171,46 @@ textarea {
 }
 
 /* ================================
+   Mobile Menu Toggle
+================================ */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 200;
+    width: 50px;
+    height: 50px;
+    background: var(--accent-teal);
+    border: none;
+    border-radius: var(--radius-md);
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition);
+}
+
+.mobile-menu-toggle:hover {
+    background: var(--accent-gold);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ================================
    Responsive
 ================================ */
 @media (max-width: 1200px) {
@@ -1184,26 +1224,51 @@ textarea {
 }
 
 @media (max-width: 992px) {
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .sidebar {
-        width: 70px;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
     }
 
     .sidebar .logo-text,
     .sidebar .nav-item span,
     .sidebar .user-details {
-        display: none;
+        display: flex;
     }
 
     .sidebar .nav-item {
-        justify-content: center;
+        justify-content: flex-start;
+        padding: 16px 20px;
+        font-size: 15px;
+    }
+
+    .sidebar .nav-item i {
+        font-size: 18px;
+        width: 24px;
     }
 
     .sidebar .user-info {
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .main-content {
-        margin-left: 70px;
+        margin-left: 0;
+        padding-top: 80px;
+    }
+
+    .main-header {
+        padding-left: 80px;
     }
 }
 
@@ -1229,6 +1294,7 @@ textarea {
         flex-direction: column;
         align-items: stretch;
         gap: 16px;
+        padding-left: 80px;
     }
 
     .header-actions {
@@ -1246,5 +1312,20 @@ textarea {
     .data-table th,
     .data-table td {
         padding: 12px;
+    }
+
+    .sidebar .nav-item {
+        padding: 18px 24px;
+        font-size: 16px;
+        min-height: 56px;
+    }
+
+    .sidebar-footer {
+        padding: 16px 20px;
+    }
+
+    .btn-logout {
+        padding: 12px 20px;
+        font-size: 14px;
     }
 }
