@@ -508,28 +508,81 @@ function initParallax() {
 }
 
 // ================================
-// Attire Lightbox
+// Attire Lightbox with Style Selection
 // ================================
 const attireImages = {
-    beige: 'images/beige_attire.png',
-    tan: 'images/tan_attire.png',
-    turquoise: 'images/turquoise_attire.png',
-    teal: 'images/teal_attire.png',
-    charcoal: 'images/charcoal_attire.png'
+    beige: {
+        'semi-formal': 'images/beige_semi_formal.png',
+        'formal': 'images/beige_formal.png'
+    },
+    tan: {
+        'semi-formal': 'images/tan_semi_formal.png',
+        'formal': 'images/tan_formal.png'
+    },
+    turquoise: {
+        'semi-formal': 'images/turquoise_semi_formal.png',
+        'formal': 'images/turquoise_formal.png'
+    },
+    teal: {
+        'semi-formal': 'images/teal_semi_formal.png',
+        'formal': 'images/teal_formal.png'
+    },
+    charcoal: {
+        'semi-formal': 'images/charcoal_semi_formal.png',
+        'formal': 'images/charcoal_formal.png'
+    }
 };
+
+let currentColorKey = '';
+let currentColorName = '';
 
 function openAttireLightbox(colorKey, colorName) {
     const lightbox = document.getElementById('attireLightbox');
     const lightboxTitle = document.getElementById('lightboxTitle');
-    const lightboxImage = document.getElementById('lightboxImage');
+    const styleSelectSubtitle = document.getElementById('styleSelectSubtitle');
+    const styleSelectScreen = document.getElementById('styleSelectScreen');
+    const imageScreen = document.getElementById('imageScreen');
 
-    if (lightbox && lightboxTitle && lightboxImage) {
+    if (lightbox && lightboxTitle) {
+        currentColorKey = colorKey;
+        currentColorName = colorName;
+
         lightboxTitle.textContent = colorName + ' Attire Inspiration';
-        lightboxImage.src = attireImages[colorKey];
-        lightboxImage.alt = colorName + ' Philippine Formal Attire';
+        styleSelectSubtitle.textContent = `Choose the type of attire you'd like to see for ${colorName}.`;
+
+        // Show style select, hide image
+        styleSelectScreen.style.display = 'block';
+        imageScreen.style.display = 'none';
+
         lightbox.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
+}
+
+function selectAttireStyle(style) {
+    const styleSelectScreen = document.getElementById('styleSelectScreen');
+    const imageScreen = document.getElementById('imageScreen');
+    const imageTitle = document.getElementById('imageTitle');
+    const lightboxImage = document.getElementById('lightboxImage');
+
+    const styleName = style === 'semi-formal' ? 'Semi-Formal' : 'Formal';
+
+    // Update image screen
+    imageTitle.textContent = `${currentColorName} - ${styleName}`;
+    lightboxImage.src = attireImages[currentColorKey][style];
+    lightboxImage.alt = `${currentColorName} ${styleName} Philippine Attire`;
+
+    // Switch screens
+    styleSelectScreen.style.display = 'none';
+    imageScreen.style.display = 'block';
+}
+
+function goBackToStyleSelect() {
+    const styleSelectScreen = document.getElementById('styleSelectScreen');
+    const imageScreen = document.getElementById('imageScreen');
+
+    styleSelectScreen.style.display = 'block';
+    imageScreen.style.display = 'none';
 }
 
 function closeLightbox() {
@@ -537,6 +590,12 @@ function closeLightbox() {
     if (lightbox) {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
+
+        // Reset to style select screen for next open
+        const styleSelectScreen = document.getElementById('styleSelectScreen');
+        const imageScreen = document.getElementById('imageScreen');
+        if (styleSelectScreen) styleSelectScreen.style.display = 'block';
+        if (imageScreen) imageScreen.style.display = 'none';
     }
 }
 
