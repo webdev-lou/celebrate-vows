@@ -592,24 +592,24 @@ function initParallax() {
 // ================================
 const attireImages = {
     beige: {
-        'semi-formal': 'images/beige_semi_formal.webp',
-        'formal': 'images/beige_formal.webp'
+        'semi-formal': 'images/pale-cream-semi.webp',
+        'formal': 'images/pale-cream-formal.webp'
     },
     tan: {
-        'semi-formal': 'images/tan_semi_formal.webp',
-        'formal': 'images/tan_formal.webp'
+        'semi-formal': 'images/warm-tan-semi.webp',
+        'formal': 'images/warm-tan-formal.webp'
     },
     turquoise: {
-        'semi-formal': 'images/turquoise_semi_formal.webp',
-        'formal': 'images/turquoise_formal.webp'
+        'semi-formal': 'images/soft-turqoise-semi.webp',
+        'formal': 'images/soft-turqoise-formal.webp'
     },
     teal: {
-        'semi-formal': 'images/teal_semi_formal.webp',
-        'formal': 'images/teal_formal.webp'
+        'semi-formal': 'images/deep-teal-semi.webp',
+        'formal': 'images/deep-teal-formal.webp'
     },
     charcoal: {
-        'semi-formal': 'images/charcoal_semi_formal.webp',
-        'formal': 'images/charcoal_formal.webp'
+        'semi-formal': 'images/dark-teal-blue-semi.webp',
+        'formal': 'images/dark-teal-blue-formal.webp'
     }
 };
 
