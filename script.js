@@ -10,7 +10,58 @@ document.addEventListener('DOMContentLoaded', function () {
     initRSVPForm();
     initSmoothScroll();
     loadSettings(); // Load dynamic settings
+    preloadImages(); // Preload gallery and attire images
 });
+
+// ================================
+// Image Preloading
+// ================================
+function preloadImages() {
+    // Preload gallery images
+    const galleryToPreload = [
+        'images/gallery/IMG_3649.webp',
+        'images/gallery/IMG_3528.webp',
+        'images/gallery/IMG_3568.webp',
+        'images/gallery/IMG_3605.webp',
+        'images/gallery/IMG_3724.webp',
+        'images/gallery/IMG_3901.webp',
+        'images/gallery/IMG_3610.webp',
+        'images/gallery/IMG_3534.webp',
+        'images/gallery/IMG_3596.webp',
+        'images/gallery/IMG_3602.webp',
+        'images/gallery/IMG_3609.webp',
+        'images/gallery/IMG_3618.webp',
+        'images/gallery/IMG_3639.webp',
+        'images/gallery/IMG_3701.webp',
+        'images/gallery/IMG_3783.webp',
+        'images/gallery/IMG_3921.webp'
+    ];
+
+    // Preload attire images
+    const attireToPreload = [
+        'images/pale-cream-semi.webp',
+        'images/pale-cream-formal.webp',
+        'images/warm-tan-semi.webp',
+        'images/warm-tan-formal.webp',
+        'images/soft-turqoise-semi.webp',
+        'images/soft-turqoise-formal.webp',
+        'images/deep-teal-semi.webp',
+        'images/deep-teal-formal.webp',
+        'images/dark-teal-blue-semi.webp',
+        'images/dark-teal-blue-formal.webp'
+    ];
+
+    // Combine all images
+    const allImages = [...galleryToPreload, ...attireToPreload];
+
+    // Preload each image
+    allImages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+    });
+
+    console.log(`Preloaded ${allImages.length} images`);
+}
 
 // ================================
 // Settings Management
