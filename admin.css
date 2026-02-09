@@ -374,6 +374,11 @@ textarea {
     padding: 20px;
     transition: all var(--transition);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 160px;
 }
 
 .stat-card:hover {
