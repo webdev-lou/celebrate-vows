@@ -362,7 +362,7 @@ textarea {
 ================================ */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-bottom: 24px;
 }
@@ -453,6 +453,89 @@ textarea {
 .stat-subtitle {
     font-size: 12px;
     color: var(--text-muted);
+}
+
+/* Top Scorers Card */
+.top-scorers-card {
+    grid-column: span 1;
+}
+
+.top-scorers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.loading-scorers {
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 16px 0;
+    text-align: center;
+}
+
+.scorer-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition);
+}
+
+.scorer-item:hover {
+    background: var(--bg-hover);
+}
+
+.scorer-rank {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+}
+
+.scorer-rank.gold {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1d21;
+}
+
+.scorer-rank.silver {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    color: #1a1d21;
+}
+
+.scorer-rank.bronze {
+    background: linear-gradient(135deg, #CD7F32, #A0522D);
+    color: #fff;
+}
+
+.scorer-name {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.scorer-score {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-gold);
+}
+
+.no-scorers {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 20px 0;
 }
 
 /* ================================

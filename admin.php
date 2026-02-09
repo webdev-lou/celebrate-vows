@@ -120,6 +120,18 @@ $adminUsername = Session::getAdminUsername();
                             <span id="declinedRate">0%</span> response rate
                         </div>
                     </div>
+
+                    <div class="stat-card top-scorers-card">
+                        <div class="stat-header">
+                            <span class="stat-label">🏆 TOP 5 QUIZ SCORERS</span>
+                            <i class="fas fa-trophy stat-icon" style="color: var(--accent-gold);"></i>
+                        </div>
+                        <div class="top-scorers-list" id="topScorersList">
+                            <div class="loading-scorers">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Guest Table -->

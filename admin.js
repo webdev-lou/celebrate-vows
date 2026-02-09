@@ -185,9 +185,55 @@ async function loadDashboardData() {
     // Render guest table
     renderGuestTable();
 
+    // Render top scorers
+    renderTopScorers();
+
     // Load quiz questions
     await fetchQuizQuestions();
     renderQuestionsList();
+}
+
+// ================================
+// Top 5 Quiz Scorers
+// ================================
+function renderTopScorers() {
+    const container = document.getElementById('topScorersList');
+
+    // Filter out (Groom) and (Bride) and guests with no quiz score
+    const eligibleGuests = guests.filter(guest => {
+        const name = guest.name.toLowerCase();
+        return guest.quiz_score !== null &&
+            guest.quiz_score > 0 &&
+            !name.includes('(groom)') &&
+            !name.includes('(bride)');
+    });
+
+    // Sort by quiz score (highest first), then by created_at (earliest first for tie-breaker)
+    const sortedGuests = eligibleGuests.sort((a, b) => {
+        if (b.quiz_score !== a.quiz_score) {
+            return b.quiz_score - a.quiz_score;
+        }
+        // If same score, earliest submission wins
+        return new Date(a.created_at) - new Date(b.created_at);
+    });
+
+    // Take top 5
+    const topScorers = sortedGuests.slice(0, 5);
+
+    if (topScorers.length === 0) {
+        container.innerHTML = '<div class="no-scorers">No quiz scores yet</div>';
+        return;
+    }
+
+    const rankClasses = ['gold', 'silver', 'bronze', '', ''];
+
+    container.innerHTML = topScorers.map((guest, index) => `
+        <div class="scorer-item">
+            <div class="scorer-rank ${rankClasses[index]}">${index + 1}</div>
+            <span class="scorer-name">${escapeHtml(guest.name)}</span>
+            <span class="scorer-score">${guest.quiz_score}/10</span>
+        </div>
+    `).join('');
 }
 
 // ================================
