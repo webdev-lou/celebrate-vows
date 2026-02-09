@@ -690,6 +690,33 @@ textarea {
     font-weight: 500;
 }
 
+.table-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.items-per-page {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.items-per-page:hover {
+    border-color: var(--border-light);
+}
+
+.items-per-page:focus {
+    outline: none;
+    border-color: var(--accent-gold);
+}
+
 .pagination {
     display: flex;
     align-items: center;

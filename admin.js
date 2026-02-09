@@ -14,7 +14,7 @@ const API = {
 let guests = [];
 let quizQuestions = [];
 let currentPage = 1;
-const ITEMS_PER_PAGE = 10;
+let ITEMS_PER_PAGE = 10;
 
 // Initialize on DOM Load
 document.addEventListener('DOMContentLoaded', function () {
@@ -312,6 +312,12 @@ function initGuestManagement() {
     });
 
     document.getElementById('statusFilter').addEventListener('change', () => {
+        currentPage = 1;
+        renderGuestTable();
+    });
+
+    document.getElementById('itemsPerPage').addEventListener('change', (e) => {
+        ITEMS_PER_PAGE = parseInt(e.target.value);
         currentPage = 1;
         renderGuestTable();
     });

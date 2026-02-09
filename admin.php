@@ -159,8 +159,18 @@ $adminUsername = Session::getAdminUsername();
                     </table>
 
                     <div class="table-footer">
-                        <span class="table-info">Showing <span id="showingStart">0</span> to <span
-                                id="showingEnd">0</span> of <span id="totalResults">0</span> results</span>
+                        <div class="table-footer-left">
+                            <span class="table-info">Showing <span id="showingStart">0</span> to <span
+                                    id="showingEnd">0</span> of <span id="totalResults">0</span> results</span>
+                            <select id="itemsPerPage" class="items-per-page">
+                                <option value="10">10 per page</option>
+                                <option value="30">30 per page</option>
+                                <option value="60">60 per page</option>
+                                <option value="90">90 per page</option>
+                                <option value="120">120 per page</option>
+                                <option value="150">150 per page</option>
+                            </select>
+                        </div>
                         <div class="pagination" id="pagination">
                             <!-- Pagination populated by JavaScript -->
                         </div>
