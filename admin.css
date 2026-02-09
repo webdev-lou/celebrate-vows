@@ -373,6 +373,7 @@ textarea {
     border-radius: var(--radius-lg);
     padding: 20px;
     transition: all var(--transition);
+    text-align: center;
 }
 
 .stat-card:hover {
@@ -386,8 +387,9 @@ textarea {
 
 .stat-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 8px;
     margin-bottom: 8px;
 }
 
