@@ -95,6 +95,7 @@ function initNavigation() {
     const sections = {
         guests: document.getElementById('dashboardSection'),
         quiz: document.getElementById('quizSection'),
+        media: document.getElementById('mediaSection'),
         settings: document.getElementById('settingsSection')
     };
 
@@ -113,10 +114,16 @@ function initNavigation() {
                 sections[section].classList.remove('hidden');
             }
 
+            // Load media when switching to media section
+            if (section === 'media') {
+                loadMediaGallery();
+            }
+
             // Update page title
             const titles = {
                 guests: 'Guest List Management',
                 quiz: 'Quiz Manager',
+                media: 'Media Gallery',
                 settings: 'Settings'
             };
             document.querySelector('.page-title').textContent = titles[section] || 'Guest List Management';
@@ -826,3 +833,139 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ================================
+// Media Gallery
+// ================================
+let mediaItems = [];
+
+async function loadMediaGallery() {
+    try {
+        const response = await fetch('api/media.php');
+        const data = await response.json();
+
+        if (data.error) {
+            console.error('Media error:', data.error);
+            return;
+        }
+
+        mediaItems = data.media || [];
+        const stats = data.stats || {};
+
+        // Update stats
+        document.getElementById('mediaTotalCount').textContent = stats.total || 0;
+        document.getElementById('mediaImageCount').textContent = stats.images || 0;
+        document.getElementById('mediaVideoCount').textContent = stats.videos || 0;
+        document.getElementById('mediaTotalSize').textContent = formatFileSize(stats.total_size || 0);
+
+        renderMediaGrid(mediaItems);
+    } catch (err) {
+        console.error('Failed to load media:', err);
+        document.getElementById('mediaGrid').innerHTML =
+            '<div class="media-empty"><i class="fas fa-exclamation-circle"></i><p>Failed to load media</p></div>';
+    }
+}
+
+function renderMediaGrid(items) {
+    const grid = document.getElementById('mediaGrid');
+
+    if (!items || items.length === 0) {
+        grid.innerHTML = `
+            <div class="media-empty">
+                <i class="fas fa-images"></i>
+                <p>No media uploaded yet</p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = items.map(item => {
+        const date = new Date(item.created_at).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+        });
+        const size = formatFileSize(item.file_size);
+
+        if (item.file_type === 'image') {
+            return `
+                <div class="media-card" data-id="${item.id}">
+                    <div class="media-thumb">
+                        <img src="${item.file_path}" alt="${escapeHtml(item.original_name)}" loading="lazy">
+                        <div class="media-overlay">
+                            <a href="${item.file_path}" target="_blank" class="media-action-btn" title="View full size">
+                                <i class="fas fa-expand"></i>
+                            </a>
+                            <button class="media-action-btn media-delete-btn" onclick="deleteMedia(${item.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <span class="media-uploader"><i class="fas fa-user"></i> ${escapeHtml(item.uploader_name || 'Anonymous')}</span>
+                        <span class="media-meta">${size} • ${date}</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            return `
+                <div class="media-card" data-id="${item.id}">
+                    <div class="media-thumb video-thumb">
+                        <video preload="metadata">
+                            <source src="${item.file_path}" type="${item.mime_type}">
+                        </video>
+                        <div class="video-play-icon"><i class="fas fa-play"></i></div>
+                        <div class="media-overlay">
+                            <a href="${item.file_path}" target="_blank" class="media-action-btn" title="View">
+                                <i class="fas fa-play-circle"></i>
+                            </a>
+                            <button class="media-action-btn media-delete-btn" onclick="deleteMedia(${item.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="media-info">
+                        <span class="media-uploader"><i class="fas fa-user"></i> ${escapeHtml(item.uploader_name || 'Anonymous')}</span>
+                        <span class="media-meta">${size} • ${date}</span>
+                    </div>
+                </div>
+            `;
+        }
+    }).join('');
+}
+
+async function deleteMedia(id) {
+    if (!confirm('Are you sure you want to delete this file?')) return;
+
+    try {
+        const response = await fetch(`api/media.php?id=${id}`, {
+            method: 'DELETE'
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            showToast('Media deleted successfully', 'success');
+            loadMediaGallery();
+        } else {
+            showToast(data.error || 'Failed to delete', 'error');
+        }
+    } catch (err) {
+        showToast('Failed to delete media', 'error');
+    }
+}
+
+function formatFileSize(bytes) {
+    bytes = parseInt(bytes) || 0;
+    if (bytes === 0) return '0 B';
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+}
+
+// Media type filter
+document.getElementById('mediaTypeFilter')?.addEventListener('change', function () {
+    const type = this.value;
+    if (type === 'all') {
+        renderMediaGrid(mediaItems);
+    } else {
+        renderMediaGrid(mediaItems.filter(m => m.file_type === type));
+    }
+});

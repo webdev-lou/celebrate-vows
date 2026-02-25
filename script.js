@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initSmoothScroll();
     loadSettings(); // Load dynamic settings
     preloadImages(); // Preload gallery and attire images
+    initMediaUpload(); // Media upload functionality
 });
 
 // ================================
@@ -743,6 +744,216 @@ document.addEventListener('keydown', function (e) {
         closeLightbox();
     }
 });
+
+// ================================
+// Media Upload
+// ================================
+function initMediaUpload() {
+    const fileInput = document.getElementById('mediaFileInput');
+    const dropzone = document.getElementById('uploadDropzone');
+    const chooseBtn = document.getElementById('chooseFilesBtn');
+    const previewArea = document.getElementById('uploadPreviewArea');
+    const previewGrid = document.getElementById('previewGrid');
+    const clearBtn = document.getElementById('clearFilesBtn');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const uploadMoreBtn = document.getElementById('uploadMoreBtn');
+    const successDiv = document.getElementById('uploadSuccess');
+
+    if (!fileInput || !dropzone) return;
+
+    let selectedFiles = [];
+
+    const ALLOWED_TYPES = [
+        'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+        'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo'
+    ];
+    const MAX_SIZE = 200 * 1024 * 1024; // 200MB
+
+    // Choose files button
+    chooseBtn.addEventListener('click', () => fileInput.click());
+
+    // File input change
+    fileInput.addEventListener('change', () => {
+        handleFiles(fileInput.files);
+    });
+
+    // Drag and drop
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drag-over');
+    });
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('drag-over');
+    });
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    // Clear files
+    clearBtn.addEventListener('click', resetUpload);
+
+    // Upload button
+    uploadBtn.addEventListener('click', uploadFiles);
+
+    // Upload more
+    uploadMoreBtn.addEventListener('click', resetUpload);
+
+    function handleFiles(fileList) {
+        const files = Array.from(fileList);
+        let rejected = [];
+
+        files.forEach(file => {
+            if (!ALLOWED_TYPES.includes(file.type)) {
+                rejected.push(`${file.name}: not a valid photo or video`);
+                return;
+            }
+            if (file.size > MAX_SIZE) {
+                rejected.push(`${file.name}: exceeds 50MB limit`);
+                return;
+            }
+            if (selectedFiles.length < 10) {
+                selectedFiles.push(file);
+            }
+        });
+
+        if (rejected.length > 0) {
+            alert('Some files were not added:\n' + rejected.join('\n'));
+        }
+
+        if (selectedFiles.length > 0) {
+            showPreviews();
+        }
+    }
+
+    function showPreviews() {
+        dropzone.style.display = 'none';
+        previewArea.style.display = 'block';
+        successDiv.style.display = 'none';
+
+        document.getElementById('selectedFileCount').textContent =
+            `${selectedFiles.length} file${selectedFiles.length > 1 ? 's' : ''} selected`;
+
+        previewGrid.innerHTML = '';
+        selectedFiles.forEach((file, index) => {
+            const item = document.createElement('div');
+            item.className = 'preview-item';
+
+            if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(file);
+                img.onload = () => URL.revokeObjectURL(img.src);
+                item.appendChild(img);
+            } else {
+                const videoIcon = document.createElement('div');
+                videoIcon.className = 'preview-video-icon';
+                videoIcon.innerHTML = '<i class="fas fa-play-circle"></i>';
+                item.appendChild(videoIcon);
+            }
+
+            const name = document.createElement('span');
+            name.className = 'preview-name';
+            name.textContent = file.name.length > 15
+                ? file.name.substring(0, 12) + '...'
+                : file.name;
+            item.appendChild(name);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'preview-remove';
+            removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            removeBtn.onclick = () => {
+                selectedFiles.splice(index, 1);
+                if (selectedFiles.length === 0) {
+                    resetUpload();
+                } else {
+                    showPreviews();
+                }
+            };
+            item.appendChild(removeBtn);
+
+            previewGrid.appendChild(item);
+        });
+    }
+
+    function uploadFiles() {
+        if (selectedFiles.length === 0) return;
+
+        const formData = new FormData();
+        selectedFiles.forEach(file => formData.append('files[]', file));
+
+        const uploaderName = document.getElementById('uploaderName').value.trim();
+        if (uploaderName) {
+            formData.append('uploader_name', uploaderName);
+        }
+
+        const progressDiv = document.getElementById('uploadProgress');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        uploadBtn.disabled = true;
+        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+        progressDiv.style.display = 'block';
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener('progress', (e) => {
+            if (e.lengthComputable) {
+                const pct = Math.round((e.loaded / e.total) * 100);
+                progressFill.style.width = pct + '%';
+                progressText.textContent = `Uploading... ${pct}%`;
+            }
+        });
+
+        xhr.addEventListener('load', () => {
+            try {
+                const data = JSON.parse(xhr.responseText);
+                if (data.success) {
+                    dropzone.style.display = 'none';
+                    previewArea.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    document.getElementById('uploadSuccessMsg').textContent =
+                        `${data.uploaded_count} file${data.uploaded_count > 1 ? 's' : ''} uploaded successfully!`;
+                    selectedFiles = [];
+                } else {
+                    alert('Upload failed: ' + (data.error || data.errors?.join('\n') || 'Unknown error'));
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
+                    progressDiv.style.display = 'none';
+                }
+            } catch (e) {
+                alert('Upload failed. Please try again.');
+                uploadBtn.disabled = false;
+                uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
+                progressDiv.style.display = 'none';
+            }
+        });
+
+        xhr.addEventListener('error', () => {
+            alert('Upload failed. Please check your connection.');
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
+            progressDiv.style.display = 'none';
+        });
+
+        xhr.open('POST', 'api/media.php');
+        xhr.send(formData);
+    }
+
+    function resetUpload() {
+        selectedFiles = [];
+        fileInput.value = '';
+        previewGrid.innerHTML = '';
+        dropzone.style.display = 'block';
+        previewArea.style.display = 'none';
+        successDiv.style.display = 'none';
+        document.getElementById('uploadProgress').style.display = 'none';
+        document.getElementById('progressFill').style.width = '0%';
+        const uploadBtn = document.getElementById('uploadBtn');
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
+    }
+}
 
 // Initialize optional features
 // initCountdown();

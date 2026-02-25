@@ -44,6 +44,10 @@ $adminUsername = Session::getAdminUsername();
                         <i class="fas fa-question-circle"></i>
                         <span>Quiz Manager</span>
                     </a>
+                    <a href="#" class="nav-item" data-section="media">
+                        <i class="fas fa-images"></i>
+                        <span>Media</span>
+                    </a>
                     <a href="#" class="nav-item" data-section="settings">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
@@ -252,6 +256,62 @@ $adminUsername = Session::getAdminUsername();
                                 <p>No questions yet. Add your first question!</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Media Gallery Section -->
+            <section class="content-section hidden" id="mediaSection">
+                <div class="section-header">
+                    <h2>Media Gallery</h2>
+                    <p>View and manage photos & videos uploaded by guests</p>
+                </div>
+
+                <!-- Media Stats -->
+                <div class="media-stats-row">
+                    <div class="media-stat">
+                        <i class="fas fa-photo-video"></i>
+                        <div>
+                            <span class="media-stat-value" id="mediaTotalCount">0</span>
+                            <span class="media-stat-label">Total Files</span>
+                        </div>
+                    </div>
+                    <div class="media-stat">
+                        <i class="fas fa-image"></i>
+                        <div>
+                            <span class="media-stat-value" id="mediaImageCount">0</span>
+                            <span class="media-stat-label">Photos</span>
+                        </div>
+                    </div>
+                    <div class="media-stat">
+                        <i class="fas fa-video"></i>
+                        <div>
+                            <span class="media-stat-value" id="mediaVideoCount">0</span>
+                            <span class="media-stat-label">Videos</span>
+                        </div>
+                    </div>
+                    <div class="media-stat">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <span class="media-stat-value" id="mediaTotalSize">0 MB</span>
+                            <span class="media-stat-label">Storage Used</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media Filters -->
+                <div class="media-filter-bar">
+                    <select id="mediaTypeFilter" class="filter-select">
+                        <option value="all">All Media</option>
+                        <option value="image">Photos Only</option>
+                        <option value="video">Videos Only</option>
+                    </select>
+                </div>
+
+                <!-- Media Grid -->
+                <div class="media-grid" id="mediaGrid">
+                    <div class="media-loading">
+                        <i class="fas fa-spinner fa-spin"></i> Loading media...
                     </div>
                 </div>
             </section>

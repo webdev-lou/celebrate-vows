@@ -1,0 +1,7 @@
+# Prevent PHP execution in upload directory
+<FilesMatch "\.ph(p[2-7]?|t|tml)$">
+    Require all denied
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes
