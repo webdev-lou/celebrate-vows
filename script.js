@@ -767,7 +767,7 @@ function initMediaUpload() {
         'image/jpeg', 'image/png', 'image/gif', 'image/webp',
         'video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo'
     ];
-    const MAX_SIZE = 200 * 1024 * 1024; // 200MB
+    const MAX_SIZE = 400 * 1024 * 1024; // 400MB
 
     // Choose files button
     chooseBtn.addEventListener('click', () => fileInput.click());
@@ -810,7 +810,7 @@ function initMediaUpload() {
                 return;
             }
             if (file.size > MAX_SIZE) {
-                rejected.push(`${file.name}: exceeds 200MB limit`);
+                rejected.push(`${file.name}: exceeds 400MB limit`);
                 return;
             }
             if (selectedFiles.length < 50) {
