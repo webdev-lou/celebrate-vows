@@ -400,6 +400,12 @@ $adminUsername = Session::getAdminUsername();
         </div>
     </div>
 
+    <!-- Media Lightbox -->
+    <div class="media-lightbox-overlay" id="mediaLightbox">
+        <button class="media-lightbox-close" onclick="closeMediaLightbox()">&times;</button>
+        <div class="media-lightbox-content" id="mediaLightboxContent"></div>
+    </div>
+
     <script src="admin.js?v=1.0.0"></script>
 </body>
 

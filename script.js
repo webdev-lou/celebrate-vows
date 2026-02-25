@@ -879,13 +879,17 @@ function initMediaUpload() {
     function uploadFiles() {
         if (selectedFiles.length === 0) return;
 
+        const uploaderNameInput = document.getElementById('uploaderName');
+        const uploaderName = uploaderNameInput.value.trim();
+        if (!uploaderName) {
+            alert('Please enter your name before uploading.');
+            uploaderNameInput.focus();
+            return;
+        }
+
         const formData = new FormData();
         selectedFiles.forEach(file => formData.append('files[]', file));
-
-        const uploaderName = document.getElementById('uploaderName').value.trim();
-        if (uploaderName) {
-            formData.append('uploader_name', uploaderName);
-        }
+        formData.append('uploader_name', uploaderName);
 
         const progressDiv = document.getElementById('uploadProgress');
         const progressFill = document.getElementById('progressFill');

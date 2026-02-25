@@ -891,9 +891,9 @@ function renderMediaGrid(items) {
                     <div class="media-thumb">
                         <img src="${item.file_path}" alt="${escapeHtml(item.original_name)}" loading="lazy">
                         <div class="media-overlay">
-                            <a href="${item.file_path}" target="_blank" class="media-action-btn" title="View full size">
+                            <button class="media-action-btn" onclick="openMediaLightbox('${item.file_path}', 'image')" title="View full size">
                                 <i class="fas fa-expand"></i>
-                            </a>
+                            </button>
                             <button class="media-action-btn media-delete-btn" onclick="deleteMedia(${item.id})" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -914,9 +914,9 @@ function renderMediaGrid(items) {
                         </video>
                         <div class="video-play-icon"><i class="fas fa-play"></i></div>
                         <div class="media-overlay">
-                            <a href="${item.file_path}" target="_blank" class="media-action-btn" title="View">
+                            <button class="media-action-btn" onclick="openMediaLightbox('${item.file_path}', 'video')" title="View">
                                 <i class="fas fa-play-circle"></i>
-                            </a>
+                            </button>
                             <button class="media-action-btn media-delete-btn" onclick="deleteMedia(${item.id})" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -942,8 +942,14 @@ async function deleteMedia(id) {
         const data = await response.json();
 
         if (data.success) {
+            // Immediately remove from DOM
+            const card = document.querySelector(`.media-card[data-id="${id}"]`);
+            if (card) card.remove();
+
             showToast('Media deleted successfully', 'success');
-            loadMediaGallery();
+
+            // Refresh data and stats
+            await loadMediaGallery();
         } else {
             showToast(data.error || 'Failed to delete', 'error');
         }
@@ -968,4 +974,39 @@ document.getElementById('mediaTypeFilter')?.addEventListener('change', function 
     } else {
         renderMediaGrid(mediaItems.filter(m => m.file_type === type));
     }
+});
+
+// ================================
+// Media Lightbox
+// ================================
+function openMediaLightbox(src, type) {
+    const overlay = document.getElementById('mediaLightbox');
+    const content = document.getElementById('mediaLightboxContent');
+
+    if (type === 'image') {
+        content.innerHTML = `<img src="${src}" alt="Media preview">`;
+    } else {
+        content.innerHTML = `<video controls autoplay><source src="${src}">Your browser does not support video.</video>`;
+    }
+
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMediaLightbox() {
+    const overlay = document.getElementById('mediaLightbox');
+    const content = document.getElementById('mediaLightboxContent');
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    content.innerHTML = '';
+}
+
+// Close lightbox on overlay click
+document.getElementById('mediaLightbox')?.addEventListener('click', function (e) {
+    if (e.target === this) closeMediaLightbox();
+});
+
+// Close lightbox on Escape key
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeMediaLightbox();
 });
