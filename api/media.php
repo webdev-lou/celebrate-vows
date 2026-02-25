@@ -18,7 +18,7 @@ require_once __DIR__ . '/../includes/session.php';
 // Upload config
 define('UPLOAD_DIR', __DIR__ . '/../uploads/media/');
 define('MAX_FILE_SIZE', 200 * 1024 * 1024); // 200MB
-define('MAX_FILES', 10);
+define('MAX_FILES', 50);
 
 $ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 $ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo'];

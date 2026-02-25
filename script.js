@@ -810,10 +810,10 @@ function initMediaUpload() {
                 return;
             }
             if (file.size > MAX_SIZE) {
-                rejected.push(`${file.name}: exceeds 50MB limit`);
+                rejected.push(`${file.name}: exceeds 200MB limit`);
                 return;
             }
-            if (selectedFiles.length < 10) {
+            if (selectedFiles.length < 50) {
                 selectedFiles.push(file);
             }
         });
