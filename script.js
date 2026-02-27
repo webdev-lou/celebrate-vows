@@ -876,7 +876,7 @@ function initMediaUpload() {
         });
     }
 
-    function uploadFiles() {
+    async function uploadFiles() {
         if (selectedFiles.length === 0) return;
 
         const uploaderNameInput = document.getElementById('uploaderName');
@@ -887,10 +887,6 @@ function initMediaUpload() {
             return;
         }
 
-        const formData = new FormData();
-        selectedFiles.forEach(file => formData.append('files[]', file));
-        formData.append('uploader_name', uploaderName);
-
         const progressDiv = document.getElementById('uploadProgress');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
@@ -899,54 +895,139 @@ function initMediaUpload() {
         uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
         progressDiv.style.display = 'block';
 
-        const xhr = new XMLHttpRequest();
+        const CHUNK_SIZE = 8 * 1024 * 1024; // 8MB chunks
+        let totalBytes = selectedFiles.reduce((sum, f) => sum + f.size, 0);
+        let uploadedBytes = 0;
+        let successCount = 0;
+        let errors = [];
 
-        xhr.upload.addEventListener('progress', (e) => {
-            if (e.lengthComputable) {
-                const pct = Math.round((e.loaded / e.total) * 100);
-                progressFill.style.width = pct + '%';
-                progressText.textContent = `Uploading... ${pct}%`;
-            }
-        });
+        for (let fileIdx = 0; fileIdx < selectedFiles.length; fileIdx++) {
+            const file = selectedFiles[fileIdx];
+            progressText.textContent = `Uploading file ${fileIdx + 1} of ${selectedFiles.length}...`;
 
-        xhr.addEventListener('load', () => {
-            try {
-                const data = JSON.parse(xhr.responseText);
-                if (data.success) {
-                    dropzone.style.display = 'none';
-                    previewArea.style.display = 'none';
-                    successDiv.style.display = 'block';
-                    document.getElementById('uploadSuccessMsg').textContent =
-                        `${data.uploaded_count} file${data.uploaded_count > 1 ? 's' : ''} uploaded successfully!`;
-                    selectedFiles = [];
-                } else {
-                    alert('Upload failed: ' + (data.error || data.errors?.join('\n') || 'Unknown error'));
-                    uploadBtn.disabled = false;
-                    uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
-                    progressDiv.style.display = 'none';
+            if (file.size <= CHUNK_SIZE) {
+                // Small file: direct upload
+                try {
+                    const formData = new FormData();
+                    formData.append('files[]', file);
+                    formData.append('uploader_name', uploaderName);
+
+                    const response = await new Promise((resolve, reject) => {
+                        const xhr = new XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', (e) => {
+                            if (e.lengthComputable) {
+                                const currentTotal = uploadedBytes + e.loaded;
+                                const pct = Math.round((currentTotal / totalBytes) * 100);
+                                progressFill.style.width = pct + '%';
+                                progressText.textContent = `Uploading file ${fileIdx + 1} of ${selectedFiles.length}... ${pct}%`;
+                            }
+                        });
+                        xhr.addEventListener('load', () => resolve(xhr));
+                        xhr.addEventListener('error', () => reject(new Error('Network error')));
+                        xhr.open('POST', 'api/media.php');
+                        xhr.send(formData);
+                    });
+
+                    const data = JSON.parse(response.responseText);
+                    if (data.success) {
+                        successCount += data.uploaded_count;
+                    } else {
+                        errors.push(file.name + ': ' + (data.error || 'Failed'));
+                    }
+                } catch (err) {
+                    errors.push(file.name + ': ' + err.message);
                 }
-            } catch (e) {
-                console.error('Upload response:', xhr.status, xhr.responseText);
-                if (xhr.status === 413) {
-                    alert('File too large for server. Your hosting may have a lower limit than configured. Try a smaller file or contact your host.');
-                } else {
-                    alert('Upload failed (HTTP ' + xhr.status + '). Server said: ' + xhr.responseText.substring(0, 300));
-                }
-                uploadBtn.disabled = false;
-                uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
-                progressDiv.style.display = 'none';
-            }
-        });
+                uploadedBytes += file.size;
+            } else {
+                // Large file: chunked upload
+                const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+                const uploadId = 'upload_' + Date.now() + '_' + fileIdx + '_' + Math.random().toString(36).substr(2, 9);
+                let chunkSuccess = true;
 
-        xhr.addEventListener('error', () => {
-            alert('Upload failed. Please check your connection.');
+                for (let chunkIdx = 0; chunkIdx < totalChunks; chunkIdx++) {
+                    const start = chunkIdx * CHUNK_SIZE;
+                    const end = Math.min(start + CHUNK_SIZE, file.size);
+                    const chunk = file.slice(start, end);
+
+                    try {
+                        const formData = new FormData();
+                        formData.append('action', 'chunk');
+                        formData.append('chunk', chunk, 'chunk');
+                        formData.append('upload_id', uploadId);
+                        formData.append('chunk_index', chunkIdx);
+                        formData.append('total_chunks', totalChunks);
+
+                        const response = await fetch('api/media.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        if (!data.success) {
+                            chunkSuccess = false;
+                            errors.push(file.name + ': Chunk ' + chunkIdx + ' failed - ' + (data.error || 'Unknown'));
+                            break;
+                        }
+
+                        uploadedBytes += (end - start);
+                        const pct = Math.round((uploadedBytes / totalBytes) * 100);
+                        progressFill.style.width = pct + '%';
+                        progressText.textContent = `Uploading file ${fileIdx + 1} of ${selectedFiles.length}... ${pct}%`;
+                    } catch (err) {
+                        chunkSuccess = false;
+                        errors.push(file.name + ': Network error on chunk ' + chunkIdx);
+                        break;
+                    }
+                }
+
+                // Assemble the chunks
+                if (chunkSuccess) {
+                    try {
+                        progressText.textContent = `Processing file ${fileIdx + 1} of ${selectedFiles.length}...`;
+                        const formData = new FormData();
+                        formData.append('action', 'assemble');
+                        formData.append('upload_id', uploadId);
+                        formData.append('file_name', file.name);
+                        formData.append('total_chunks', totalChunks);
+                        formData.append('total_size', file.size);
+                        formData.append('uploader_name', uploaderName);
+
+                        const response = await fetch('api/media.php', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+                        if (data.success) {
+                            successCount++;
+                        } else {
+                            errors.push(file.name + ': Assembly failed - ' + (data.error || 'Unknown'));
+                        }
+                    } catch (err) {
+                        errors.push(file.name + ': Assembly error - ' + err.message);
+                    }
+                }
+            }
+        }
+
+        // Show result
+        if (successCount > 0) {
+            dropzone.style.display = 'none';
+            previewArea.style.display = 'none';
+            successDiv.style.display = 'block';
+            document.getElementById('uploadSuccessMsg').textContent =
+                `${successCount} file${successCount > 1 ? 's' : ''} uploaded successfully!`;
+            selectedFiles = [];
+        } else {
+            alert('Upload failed: ' + errors.join('\n'));
             uploadBtn.disabled = false;
             uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
             progressDiv.style.display = 'none';
-        });
+        }
 
-        xhr.open('POST', 'api/media.php');
-        xhr.send(formData);
+        if (errors.length > 0 && successCount > 0) {
+            console.warn('Some files failed:', errors);
+        }
     }
 
     function resetUpload() {

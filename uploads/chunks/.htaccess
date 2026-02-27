@@ -1,0 +1,13 @@
+# Deny access to chunk files
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule .* - [F,L]
+</IfModule>
+
+# Disable PHP execution
+<FilesMatch "\.ph(p[2-7]?|t|tml)$">
+    Deny from all
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes

@@ -2,6 +2,7 @@
 /**
  * Media Upload API
  * Handles photo and video uploads from guests
+ * Supports chunked uploads for large files
  */
 
 header('Access-Control-Allow-Origin: *');
@@ -17,6 +18,7 @@ require_once __DIR__ . '/../includes/session.php';
 
 // Upload config
 define('UPLOAD_DIR', __DIR__ . '/../uploads/media/');
+define('CHUNK_DIR', __DIR__ . '/../uploads/chunks/');
 define('MAX_FILE_SIZE', 400 * 1024 * 1024); // 400MB
 define('MAX_FILES', 50);
 
@@ -31,7 +33,14 @@ switch ($method) {
         getMedia();
         break;
     case 'POST':
-        uploadMedia();
+        $action = $_POST['action'] ?? 'upload';
+        if ($action === 'chunk') {
+            handleChunkUpload();
+        } elseif ($action === 'assemble') {
+            assembleChunks();
+        } else {
+            uploadMedia();
+        }
         break;
     case 'DELETE':
         deleteMedia();
@@ -111,7 +120,194 @@ function getMedia()
 }
 
 // ================================
-// POST - Upload media (public)
+// POST - Handle chunk upload
+// ================================
+function handleChunkUpload()
+{
+    set_time_limit(120);
+
+    if (!is_dir(CHUNK_DIR)) {
+        mkdir(CHUNK_DIR, 0755, true);
+    }
+
+    $uploadId = $_POST['upload_id'] ?? null;
+    $chunkIndex = intval($_POST['chunk_index'] ?? -1);
+    $totalChunks = intval($_POST['total_chunks'] ?? 0);
+
+    if (!$uploadId || $chunkIndex < 0 || $totalChunks <= 0) {
+        jsonResponse(['error' => 'Missing chunk parameters'], 400);
+    }
+
+    // Sanitize upload_id to prevent directory traversal
+    $uploadId = preg_replace('/[^a-zA-Z0-9_-]/', '', $uploadId);
+
+    if (empty($_FILES['chunk'])) {
+        jsonResponse(['error' => 'No chunk data received'], 400);
+    }
+
+    $chunk = $_FILES['chunk'];
+    if ($chunk['error'] !== UPLOAD_ERR_OK) {
+        jsonResponse(['error' => 'Chunk upload error: ' . $chunk['error']], 400);
+    }
+
+    // Create directory for this upload
+    $uploadChunkDir = CHUNK_DIR . $uploadId . '/';
+    if (!is_dir($uploadChunkDir)) {
+        mkdir($uploadChunkDir, 0755, true);
+    }
+
+    // Save chunk
+    $chunkPath = $uploadChunkDir . 'chunk_' . str_pad($chunkIndex, 5, '0', STR_PAD_LEFT);
+    if (!move_uploaded_file($chunk['tmp_name'], $chunkPath)) {
+        jsonResponse(['error' => 'Failed to save chunk'], 500);
+    }
+
+    jsonResponse([
+        'success' => true,
+        'chunk_index' => $chunkIndex,
+        'received' => $chunkIndex + 1,
+        'total' => $totalChunks
+    ]);
+}
+
+// ================================
+// POST - Assemble chunks into file
+// ================================
+function assembleChunks()
+{
+    global $ALLOWED_TYPES, $ALLOWED_IMAGE_TYPES;
+
+    set_time_limit(300);
+
+    $uploadId = $_POST['upload_id'] ?? null;
+    $fileName = $_POST['file_name'] ?? 'unknown';
+    $totalChunks = intval($_POST['total_chunks'] ?? 0);
+    $totalSize = intval($_POST['total_size'] ?? 0);
+    $uploaderName = trim($_POST['uploader_name'] ?? 'Anonymous');
+
+    if (!$uploadId || $totalChunks <= 0) {
+        jsonResponse(['error' => 'Missing assemble parameters'], 400);
+    }
+
+    $uploadId = preg_replace('/[^a-zA-Z0-9_-]/', '', $uploadId);
+    $uploadChunkDir = CHUNK_DIR . $uploadId . '/';
+
+    if (!is_dir($uploadChunkDir)) {
+        jsonResponse(['error' => 'Upload chunks not found'], 404);
+    }
+
+    // Validate total file size
+    if ($totalSize > MAX_FILE_SIZE) {
+        // Clean up chunks
+        cleanupChunks($uploadChunkDir);
+        jsonResponse(['error' => 'File too large (max 400MB)'], 400);
+    }
+
+    try {
+        ensureTable();
+
+        // Create upload directory
+        if (!is_dir(UPLOAD_DIR)) {
+            mkdir(UPLOAD_DIR, 0755, true);
+        }
+
+        // Determine extension and generate unique name
+        $extension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $uniqueName = uniqid('media_', true) . '.' . $extension;
+        $destination = UPLOAD_DIR . $uniqueName;
+
+        // Assemble chunks into final file
+        $destFile = fopen($destination, 'wb');
+        if (!$destFile) {
+            cleanupChunks($uploadChunkDir);
+            jsonResponse(['error' => 'Failed to create output file'], 500);
+        }
+
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $chunkPath = $uploadChunkDir . 'chunk_' . str_pad($i, 5, '0', STR_PAD_LEFT);
+            if (!file_exists($chunkPath)) {
+                fclose($destFile);
+                unlink($destination);
+                cleanupChunks($uploadChunkDir);
+                jsonResponse(['error' => "Missing chunk $i"], 400);
+            }
+            $chunkData = file_get_contents($chunkPath);
+            fwrite($destFile, $chunkData);
+            unset($chunkData); // Free memory
+        }
+        fclose($destFile);
+
+        // Clean up chunks
+        cleanupChunks($uploadChunkDir);
+
+        // Validate MIME type of assembled file
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($destination);
+
+        if (!in_array($mimeType, $ALLOWED_TYPES)) {
+            unlink($destination);
+            jsonResponse(['error' => 'Invalid file type: ' . $mimeType], 400);
+        }
+
+        // Determine file type
+        $fileType = in_array($mimeType, $ALLOWED_IMAGE_TYPES) ? 'image' : 'video';
+
+        // Rename with proper prefix
+        $properName = uniqid($fileType . '_', true) . '.' . $extension;
+        $properDest = UPLOAD_DIR . $properName;
+        rename($destination, $properDest);
+
+        // Get actual file size
+        $actualSize = filesize($properDest);
+
+        // Save to database
+        $db = getDB();
+        $stmt = $db->prepare("
+            INSERT INTO media_uploads (original_name, file_name, file_path, file_type, mime_type, file_size, uploader_name)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $fileName,
+            $properName,
+            'uploads/media/' . $properName,
+            $fileType,
+            $mimeType,
+            $actualSize,
+            sanitize($uploaderName ?: 'Anonymous')
+        ]);
+
+        jsonResponse([
+            'success' => true,
+            'uploaded' => [
+                [
+                    'id' => $db->lastInsertId(),
+                    'name' => $fileName,
+                    'type' => $fileType
+                ]
+            ],
+            'uploaded_count' => 1,
+            'total_files' => 1
+        ], 201);
+
+    } catch (Exception $e) {
+        jsonResponse(['error' => 'Server error: ' . $e->getMessage()], 500);
+    }
+}
+
+function cleanupChunks($dir)
+{
+    if (is_dir($dir)) {
+        $files = glob($dir . '*');
+        foreach ($files as $file) {
+            if (is_file($file))
+                unlink($file);
+        }
+        rmdir($dir);
+    }
+}
+
+// ================================
+// POST - Upload media (public) - for small files
 // ================================
 function uploadMedia()
 {
