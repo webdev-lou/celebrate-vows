@@ -54,7 +54,7 @@ function ensureTable()
             file_path VARCHAR(500) NOT NULL,
             file_type ENUM('image', 'video') NOT NULL,
             mime_type VARCHAR(100) NOT NULL,
-            file_size INT NOT NULL,
+            file_size BIGINT NOT NULL,
             uploader_name VARCHAR(255) DEFAULT 'Anonymous',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
@@ -118,6 +118,9 @@ function uploadMedia()
     global $ALLOWED_TYPES, $ALLOWED_IMAGE_TYPES;
 
     try {
+        // Disable timeout for large uploads
+        set_time_limit(0);
+
         ensureTable();
 
         // Create upload directory if it doesn't exist
@@ -159,7 +162,7 @@ function uploadMedia()
 
             // Validate file size
             if ($size > MAX_FILE_SIZE) {
-                $errors[] = "$name: File too large (max 50MB)";
+                $errors[] = "$name: File too large (max 400MB)";
                 continue;
             }
 
