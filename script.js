@@ -932,10 +932,12 @@ function initMediaUpload() {
                     if (data.success) {
                         successCount += data.uploaded_count;
                     } else {
-                        errors.push(file.name + ': ' + (data.error || 'Failed'));
+                        console.warn(file.name, data.error);
+                        errors.push(file.name);
                     }
                 } catch (err) {
-                    errors.push(file.name + ': ' + err.message);
+                    console.warn(file.name, err);
+                    errors.push(file.name);
                 }
                 uploadedBytes += file.size;
             } else {
@@ -965,7 +967,8 @@ function initMediaUpload() {
                         const data = await response.json();
                         if (!data.success) {
                             chunkSuccess = false;
-                            errors.push(file.name + ': Chunk ' + chunkIdx + ' failed - ' + (data.error || 'Unknown'));
+                            console.warn(file.name, 'chunk', chunkIdx, data.error);
+                            errors.push(file.name);
                             break;
                         }
 
@@ -975,7 +978,8 @@ function initMediaUpload() {
                         progressText.textContent = `Uploading file ${fileIdx + 1} of ${selectedFiles.length}... ${pct}%`;
                     } catch (err) {
                         chunkSuccess = false;
-                        errors.push(file.name + ': Network error on chunk ' + chunkIdx);
+                        console.warn(file.name, 'chunk', chunkIdx, err);
+                        errors.push(file.name);
                         break;
                     }
                 }
@@ -1001,10 +1005,12 @@ function initMediaUpload() {
                         if (data.success) {
                             successCount++;
                         } else {
-                            errors.push(file.name + ': Assembly failed - ' + (data.error || 'Unknown'));
+                            console.warn(file.name, 'assemble', data.error);
+                            errors.push(file.name);
                         }
                     } catch (err) {
-                        errors.push(file.name + ': Assembly error - ' + err.message);
+                        console.warn(file.name, 'assemble', err);
+                        errors.push(file.name);
                     }
                 }
             }
@@ -1019,7 +1025,7 @@ function initMediaUpload() {
                 `${successCount} file${successCount > 1 ? 's' : ''} uploaded successfully!`;
             selectedFiles = [];
         } else {
-            alert('Upload failed: ' + errors.join('\n'));
+            alert('Oops! We couldn\'t upload your files right now. Please check your connection and try again.');
             uploadBtn.disabled = false;
             uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
             progressDiv.style.display = 'none';
