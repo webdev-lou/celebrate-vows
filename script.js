@@ -926,7 +926,12 @@ function initMediaUpload() {
                     progressDiv.style.display = 'none';
                 }
             } catch (e) {
-                alert('Upload failed. Please try again.');
+                console.error('Upload response:', xhr.status, xhr.responseText);
+                if (xhr.status === 413) {
+                    alert('File too large for server. Your hosting may have a lower limit than configured. Try a smaller file or contact your host.');
+                } else {
+                    alert('Upload failed (HTTP ' + xhr.status + '). Server said: ' + xhr.responseText.substring(0, 300));
+                }
                 uploadBtn.disabled = false;
                 uploadBtn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Files';
                 progressDiv.style.display = 'none';
