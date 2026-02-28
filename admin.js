@@ -1010,3 +1010,24 @@ document.getElementById('mediaLightbox')?.addEventListener('click', function (e)
 document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeMediaLightbox();
 });
+
+// ================================
+// Download All Media
+// ================================
+function downloadAllMedia() {
+    const btn = document.getElementById('downloadAllMedia');
+    const filter = document.getElementById('mediaTypeFilter')?.value || 'all';
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
+
+    // Open download in new window/tab
+    const url = 'api/download.php?type=' + filter;
+    window.location.href = url;
+
+    // Re-enable button after a delay
+    setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-download"></i> Download All';
+    }, 3000);
+}

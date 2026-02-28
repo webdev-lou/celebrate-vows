@@ -1740,3 +1740,28 @@ textarea {
     border-radius: 8px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
+
+/* ================================
+   Download All Button
+================================ */
+.btn-download-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.btn-download-all:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.media-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
