@@ -2128,3 +2128,54 @@ textarea {
         gap: var(--spacing-xs);
     }
 }
+
+/* ================================
+   RSVP Closed Message
+================================ */
+.rsvp-closed-message {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rsvp-closed-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--accent-coral), var(--primary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+    font-size: 2rem;
+    color: white;
+    animation: pulse-heart 2s ease-in-out infinite;
+}
+
+@keyframes pulse-heart {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.rsvp-closed-message h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.rsvp-closed-message p {
+    font-family: var(--font-body);
+    color: var(--gray-600);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: var(--spacing-sm);
+}
+
+.rsvp-closed-message .btn {
+    margin-top: var(--spacing-lg);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}

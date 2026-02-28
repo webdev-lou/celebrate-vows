@@ -28,7 +28,7 @@
         href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=1.5.0">
+    <link rel="stylesheet" href="style.css?v=1.7.0">
 </head>
 
 <body>
@@ -43,7 +43,6 @@
                 <li><a href="#journey" class="nav-link">OUR STORY</a></li>
                 <li><a href="#details" class="nav-link">DETAILS</a></li>
                 <li><a href="#entourage" class="nav-link">ENTOURAGE</a></li>
-                <li><a href="#rsvp" class="nav-link">RSVP</a></li>
                 <li><a href="#capture" class="nav-link">UPLOAD</a></li>
             </ul>
             <button class="nav-toggle" id="nav-toggle">
@@ -63,7 +62,7 @@
                 <i class="far fa-calendar-alt"></i>
                 <span id="weddingDateDisplay">FEBRUARY 28, 2026</span>
             </div>
-            <a href="#rsvp" class="btn btn-primary">RSVP Now</a>
+            <a href="#capture" class="btn btn-primary">View Our Memories</a>
         </div>
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
@@ -405,74 +404,23 @@
         </div>
     </section>
 
-    <!-- RSVP & Quiz Section -->
+    <!-- RSVP Section (Closed) -->
     <section class="rsvp" id="rsvp">
         <div class="container">
             <div class="rsvp-content">
                 <div class="rsvp-header">
-                    <h2 class="section-title">RSVP & Journey Quiz</h2>
-                    <p class="section-description">Help us prepare and see how well you know our story! Kindly respond
-                        by <span id="rsvpDeadlineDisplay">January 15, 2026</span>.</p>
+                    <h2 class="section-title">Thank You!</h2>
                 </div>
-
-                <form class="rsvp-form" id="rsvp-form">
-                    <!-- Basic Info -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required placeholder="Enter your full name">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Will you be attending?</label>
-                            <div class="radio-cards">
-                                <label class="radio-card">
-                                    <input type="radio" name="attending" value="yes" required>
-                                    <span class="radio-card-content">
-                                        <i class="far fa-smile"></i>
-                                        Joyfully Accepts
-                                    </span>
-                                </label>
-                                <label class="radio-card">
-                                    <input type="radio" name="attending" value="no">
-                                    <span class="radio-card-content">
-                                        <i class="far fa-frown"></i>
-                                        Regretfully Declines
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
+                <div class="rsvp-closed-message">
+                    <div class="rsvp-closed-icon">
+                        <i class="fas fa-heart"></i>
                     </div>
-
-                    <!-- Quiz Section -->
-                    <div class="quiz-section">
-                        <div class="quiz-header">
-                            <div class="quiz-icon">
-                                <i class="fas fa-question-circle"></i>
-                            </div>
-                            <div class="quiz-title-group">
-                                <h3>How well do you know us?</h3>
-                                <p>A quick trivia challenge before you submit your response!</p>
-                            </div>
-                        </div>
-
-                        <div class="quiz-grid" id="quiz-container">
-                            <!-- Quiz questions will be loaded dynamically from the database -->
-                            <div class="quiz-loading">
-                                <i class="fas fa-spinner fa-spin"></i>
-                                <span>Loading quiz questions...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="message">Message for the Couple</label>
-                        <textarea id="message" name="message" rows="3"
-                            placeholder="Any dietary restrictions or well wishes?"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">Submit RSVP & Quiz Answers</button>
-                </form>
+                    <h3>RSVP Registration is Now Closed</h3>
+                    <p>Thank you to everyone who responded! We were truly blessed to celebrate our special day with all
+                        of you.</p>
+                    <p>Don't forget to share your photos and videos from the celebration!</p>
+                    <a href="#capture" class="btn btn-primary"><i class="fas fa-camera"></i> Share Your Memories</a>
+                </div>
             </div>
         </div>
     </section>
@@ -563,7 +511,7 @@
         <div class="lightbox-counter" id="galleryCounter">1 / 17</div>
     </div>
 
-    <script src="script.js?v=1.6.0"></script>
+    <script src="script.js?v=1.7.0"></script>
 </body>
 
 </html>
